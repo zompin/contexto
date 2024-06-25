@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Tab profile",
+  "version": "0.0.1",
+  "description": "Profile",
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tab-profile@rokot",
+      "strict_min_version": "113.0"
+    },
+    "gecko_android": {
+      "id": "tab-profile@rokot",
+      "strict_min_version": "113.0"
+    }
+  },
+  "permissions": [
+    "tabs",
+    "menus",
+    "contextualIdentities",
+    "cookies",
+    "activeTab"
+  ],
+  "icons": {
+    "16": "icons/test.svg"
+  }
+}

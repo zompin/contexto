@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "start:firefox": "npx web-ext run --source-dir src"
+  }
+}
