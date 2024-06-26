@@ -16,38 +16,35 @@ function generateIcon(color) {
 
 async function generateProfilesMenu(_, tmp) {
     const identities = await browser.contextualIdentities.query({})
-
-    browser.menus.create({
+    const menuItems = [{
         title: 'Tab profile',
         id: 'default-profile',
-    })
-
-    browser.menus.create({
+    }, {
         title: 'Профиль по умолчанию',
         id: "firefox-default",
         parentId: 'default-profile',
         icons: {
             16: generateIcon(),
         },
-    })
+    }]
 
-    identities.forEach(el => {
-        browser.menus.create({
-            title: el.name,
-            id: el.cookieStoreId,
-            parentId: 'default-profile',
-            icons: {
-                16: generateIcon(el.colorCode)
-            },
-        })
-    })
+    identities.forEach(el => menuItems.push({
+        title: el.name,
+        id: el.cookieStoreId,
+        parentId: 'default-profile',
+        icons: {
+            16: generateIcon(el.colorCode)
+        },
+    }))
+
+    menuItems.forEach(m => browser.menus.create(m))
 }
 
 getActiveTab().then(() => generateProfilesMenu())
 
 browser.menus.onShown.addListener(generateProfilesMenu)
 
-browser.menus.onClicked.addListener(async (data, tab) => {
+browser.menus.onClicked.addListener(async ({ menuItemId, linkUrl }, tab) => {
     const {
         id: tabId,
         discarded,
@@ -61,12 +58,12 @@ browser.menus.onClicked.addListener(async (data, tab) => {
     await browser.tabs.remove(tabId)
     await browser.tabs.create({
         active: true,
-        cookieStoreId: String(data.menuItemId),
+        cookieStoreId: String(menuItemId),
         discarded,
         index,
         muted: mutedInfo.muted,
         openerTabId,
         pinned,
-        url: /^abot:/.test(url) ? url : undefined,
+        url: linkUrl || (/^about:/.test(url) ? undefined : url),
     })
 })
