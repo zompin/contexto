@@ -14,14 +14,8 @@ function generateIcon(color) {
     return `data:image/svg+xml,${svg}`
 }
 
-browser.menus.create({
-    title: 'Tab profile',
-    id: 'default-profile',
-})
-
 async function generateProfilesMenu(_, tmp) {
     const identities = await browser.contextualIdentities.query({})
-    const tab = await getActiveTab()
 
     browser.menus.create({
         title: 'Tab profile',
@@ -32,7 +26,6 @@ async function generateProfilesMenu(_, tmp) {
         title: 'Профиль по умолчанию',
         id: "firefox-default",
         parentId: 'default-profile',
-        enabled: tab.cookieStoreId !== 'firefox-default',
         icons: {
             16: generateIcon(),
         },
@@ -43,7 +36,6 @@ async function generateProfilesMenu(_, tmp) {
             title: el.name,
             id: el.cookieStoreId,
             parentId: 'default-profile',
-            enabled: tab.cookieStoreId !== el.cookieStoreId,
             icons: {
                 16: generateIcon(el.colorCode)
             },
@@ -75,8 +67,6 @@ browser.menus.onClicked.addListener(async (data, tab) => {
         muted: mutedInfo.muted,
         openerTabId,
         pinned,
-        url,
+        url: /^abot:/.test(url) ? url : undefined,
     })
-    await browser.menus.removeAll()
-    await generateProfilesMenu()
 })
