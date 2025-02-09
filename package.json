@@ -1,6 +1,6 @@
 {
   "scripts": {
     "start:firefox": "npx web-ext run --source-dir src",
-    "make": "cd src && zip ../addon.zip ./manifest.json ./background.js ./icons -r"
+    "make": "rm -f contexto.zip && cd src && zip ../contexto.zip ./manifest.json ./background.js ./icons ./popup -r"
   }
 }

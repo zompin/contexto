@@ -10,7 +10,7 @@ function generateIcon(color) {
     return `data:image/svg+xml,${svg}`
 }
 
-const MENU_ID = 'default-profile'
+const MENU_ID = 'contexto-menu'
 
 function createMenuItem({ name, cookieStoreId, colorCode }) {
     return {
@@ -25,7 +25,7 @@ function createMenuItem({ name, cookieStoreId, colorCode }) {
 
 function getMenuItems(identities) {
     const menuItems = [{
-        title: 'Tab profile',
+        title: 'Contexto',
         id: MENU_ID,
     }, createMenuItem({
         name: 'Профиль по умолчанию',

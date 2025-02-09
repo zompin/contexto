@@ -1,0 +1,25 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="34" width="34" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <ellipse ry="5.99999" rx="5.75" id="svg_1" cy="16.30187" cx="15.74499" stroke="#5a5b59" fill="#fff"/>
+  <line id="svg_3" y2="16.42687" x2="32.11998" y1="16.42687" x1="21.86999" fill-opacity="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_5" y2="22.30187" x2="22.36999" y1="22.42687" x1="31.99498" fill-opacity="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_6" y2="19.92687" x2="20.74499" y1="22.42687" x1="22.74499" fill-opacity="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_7" y2="10.42688" x2="22.24499" y1="10.42688" x1="31.99498" fill-opacity="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_8" y2="12.30188" x2="20.36999" y1="10.42688" x1="22.49499" fill-opacity="null" stroke-width="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_9" y2="11.80188" x2="11.245" y1="-0.44811" x1="-0.50499" fill-opacity="null" stroke-width="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_10" y2="16.67687" x2="-0.12999" y1="16.55187" x1="10.12" fill-opacity="null" stroke-width="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_11" y2="30.05186" x2="-0.75499" y1="20.80187" x1="11.495" fill-opacity="null" stroke-width="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_12" y2="9.42688" x2="-0.62999" y1="13.80188" x1="10.62" fill-opacity="null" stroke-width="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_13" y2="32.92686" x2="8.87" y1="22.42687" x1="14.49499" fill-opacity="null" stroke-width="null" stroke="#5a5b59" fill="none"/>
+  <line id="svg_14" y2="-0.32311" x2="7.995" y1="11.05188" x1="12.245" fill-opacity="null" stroke-width="null" stroke="#5a5b59" fill="none"/>
+ </g>
+</svg>

@@ -1,24 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "Tab profile",
+  "name": "Contexto",
   "version": "0.0.1",
-  "description": "Profile",
+  "description": "Switch browser environment between tasks",
   "background": {
     "scripts": ["background.js"],
     "type": "module"
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "tab-profile@rokot",
-      "strict_min_version": "113.0"
-    },
-    "gecko_android": {
-      "id": "tab-profile@rokot",
+      "id": "contexto@rokot",
       "strict_min_version": "113.0"
     }
   },
   "action": {
     "default_popup": "popup/popup.html"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K"
+      }
+    }
   },
   "permissions": [
     "tabs",
@@ -29,6 +32,6 @@
     "storage"
   ],
   "icons": {
-    "16": "icons/test.svg"
+    "32": "icons/icon-32x32.svg"
   }
 }
