@@ -17,12 +17,16 @@
       "strict_min_version": "113.0"
     }
   },
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
   "permissions": [
     "tabs",
     "menus",
     "contextualIdentities",
     "cookies",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "icons": {
     "16": "icons/test.svg"
