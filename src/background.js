@@ -1,7 +1,3 @@
-function getActiveTab() {
-    return browser.tabs.query({ active: true }).then(([t]) => t || {})
-}
-
 function generateIcon(color) {
     color ||= 'currentColor'
 
@@ -14,37 +10,34 @@ function generateIcon(color) {
     return `data:image/svg+xml,${svg}`
 }
 
-async function generateProfilesMenu(_, tmp) {
-    const identities = await browser.contextualIdentities.query({})
-    const menuItems = [{
-        title: 'Tab profile',
-        id: 'default-profile',
-    }, {
-        title: 'Профиль по умолчанию',
-        id: "firefox-default",
-        parentId: 'default-profile',
-        icons: {
-            16: generateIcon(),
-        },
-    }]
+const MENU_ID = 'default-profile'
 
-    identities.forEach(el => menuItems.push({
-        title: el.name,
-        id: el.cookieStoreId,
-        parentId: 'default-profile',
+function createMenuItem({ name, cookieStoreId, colorCode }) {
+    return {
+        title: name,
+        id: cookieStoreId,
+        parentId: MENU_ID,
         icons: {
-            16: generateIcon(el.colorCode)
+            16: generateIcon(colorCode),
         },
-    }))
-
-    menuItems.forEach(m => browser.menus.create(m))
+    }
 }
 
-getActiveTab().then(() => generateProfilesMenu())
+function getMenuItems(identities) {
+    const menuItems = [{
+        title: 'Tab profile',
+        id: MENU_ID,
+    }, createMenuItem({
+        name: 'Профиль по умолчанию',
+        cookieStoreId: 'firefox-default'
+    })]
 
-browser.menus.onShown.addListener(generateProfilesMenu)
+    identities.forEach(el => menuItems.push(createMenuItem(el)))
 
-browser.menus.onClicked.addListener(async ({ menuItemId, linkUrl }, tab) => {
+    return menuItems
+}
+
+async function onContainerSelect({ menuItemId, linkUrl }, tab) {
     const {
         id: tabId,
         discarded,
@@ -54,16 +47,50 @@ browser.menus.onClicked.addListener(async ({ menuItemId, linkUrl }, tab) => {
         pinned,
         url
     } = tab || {}
+    const isNewTab = Boolean(linkUrl)
 
-    await browser.tabs.remove(tabId)
     await browser.tabs.create({
         active: true,
         cookieStoreId: String(menuItemId),
         discarded,
-        index,
+        index: linkUrl ? index + 1 : index,
         muted: mutedInfo.muted,
         openerTabId,
         pinned,
-        url: linkUrl || (/^about:/.test(url) ? undefined : url),
+        url: isNewTab || (/^about:/.test(url) ? undefined : url),
+    })
+
+    if (!isNewTab) {
+        await browser.tabs.remove(tabId)
+    }
+}
+
+async function appendMenu() {
+    const identities = await browser.contextualIdentities.query({})
+    const menuItems = getMenuItems(identities)
+
+    menuItems.forEach(item => {
+        browser.menus.create(item)
+    })
+}
+
+browser.contextualIdentities.onCreated.addListener(({contextualIdentity}) => {
+    browser.menus.create(createMenuItem(contextualIdentity))
+})
+
+browser.contextualIdentities.onUpdated.addListener(({contextualIdentity}) => {
+    browser.menus.update(contextualIdentity.cookieStoreId, {
+        title: contextualIdentity.name,
+        icons: {
+            16: generateIcon(contextualIdentity.colorCode)
+        }
     })
 })
+
+browser.contextualIdentities.onRemoved.addListener(({contextualIdentity}) => {
+    browser.menus.remove(contextualIdentity.cookieStoreId)
+})
+
+browser.menus.onClicked.addListener(onContainerSelect)
+
+appendMenu()
