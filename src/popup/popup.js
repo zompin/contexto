@@ -8,7 +8,7 @@ async function setContexts(data) {
         const tabs = d.tabs.reduce((acc, t) => {
             const { id, ...rest } = t
 
-            if (rest.url.startsWith('about:')) {
+            if (rest.url.startsWith('about:') || rest.url.startsWith('moz-extension:')) {
                 return acc
             }
 
@@ -38,7 +38,7 @@ async function getActiveContext() {
     const tabs = await browser.tabs.query({ windowId: currentWindow.id })
 
     return {
-        tabs: tabs.map(({ id, index, active, pinned, isInReaderMode, cookieStoreId, url, favIconUrl, title }) => ({
+        tabs: tabs.map(({ id, index, active, pinned, cookieStoreId, url, favIconUrl, title }) => ({
             index,
             active,
             pinned,
