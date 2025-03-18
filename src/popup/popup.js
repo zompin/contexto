@@ -78,6 +78,14 @@ async function switchContext(contextId) {
     await updateList()
 }
 
+async function removeContext(contextId) {
+    const storedContexts = await getContexts()
+    const contexts = storedContexts.filter(c => c.id !== contextId)
+
+    await setContexts(contexts)
+    await updateList()
+}
+
 function getContainer() {
     return document.querySelector('.container')
 }
@@ -103,21 +111,32 @@ function renderCreateContextButton() {
 
 function renderContextButton(context) {
     const container = getContainer()
+    const contextDiv = document.createElement('div')
     const contextButton = document.createElement('button')
+    const removeContextButton = document.createElement('button')
+
+    contextDiv.className = 'context'
+    contextButton.className = 'context__switch'
+    removeContextButton.className = 'context__remove'
+    removeContextButton.onclick = () => removeContext(context.id)
+    removeContextButton.textContent = 'x'
 
     context.tabs.forEach((t) => {
+        const div = document.createElement('div')
         const img = document.createElement('img')
 
         img.src = t.favIconUrl
         img.alt = t.title
-        img.width = 16
-        img.height = 16
 
-        contextButton.append(img)
+        div.className = 'context__tab'
+        div.append(img)
+        contextButton.append(div)
     })
 
     contextButton.onclick = () => switchContext(context.id)
-    container.append(contextButton)
+    contextDiv.append(contextButton)
+    contextDiv.append(removeContextButton)
+    container.append(contextDiv)
 }
 
 async function renderStoredContexts() {
