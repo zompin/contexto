@@ -1,16 +1,28 @@
+body {
+    margin: 0;
+}
+
 .container {
     display: grid;
-    gap: 10px
+    gap: 10px;
+    min-width: 300px;
+    padding: 10px;
 }
 
 .context {
-    display: flex;
     gap: 5px;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+}
+
+.context__title {
+
 }
 
 .context__switch {
     display: flex;
     gap: 5px;
+    grid-column: 1 / 3;
 }
 
 .context__tab {
@@ -22,4 +34,13 @@
 .context__tab > img {
     width: 100%;
     height: 100%;
+}
+
+.popover {
+    border-width: 1px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    position: fixed;
+    margin-top: 5px;
+    margin-left: 5px;
 }

@@ -2,6 +2,7 @@ import {removeContext} from '../js/removeContext.js'
 import {getContexts} from '../js/getContexts.js'
 import {switchContext} from '../js/switchContext.js'
 import {createContext} from '../js/createContext.js'
+import {updateContextTitle} from '../js/updateContextTitle.js'
 
 function getContainer() {
     return document.querySelector('.container')
@@ -32,27 +33,46 @@ function renderCreateContextButton() {
 function renderContextButton(context) {
     const container = getContainer()
     const contextDiv = document.createElement('div')
+    const contextTitle = document.createElement('input')
     const contextButton = document.createElement('button')
     const removeContextButton = document.createElement('button')
 
+    contextTitle.onkeyup = (e) => updateContextTitle(context.id, e.target.value)
     contextDiv.className = 'context'
-    contextButton.className = 'context__switch'
-    removeContextButton.className = 'context__remove'
+    contextTitle.className = 'context__title'
+    contextTitle.value = context.title || 'No name'
     removeContextButton.onclick = async () => {
         await removeContext(context.id)
         await updateList()
     }
+    removeContextButton.className = 'context__remove'
     removeContextButton.textContent = 'x'
+    contextButton.className = 'context__switch'
 
     context.tabs.forEach((t) => {
         const div = document.createElement('div')
         const img = document.createElement('img')
+        const popover = document.createElement('div')
+
+        popover.popover = 'manual'
+        popover.textContent = t.title
+        popover.className = 'popover'
 
         img.src = t.favIconUrl
         img.alt = t.title
 
         div.className = 'context__tab'
         div.append(img)
+        div.append(popover)
+
+        div.onmouseenter = () => {
+            popover.showPopover()
+        }
+
+        div.onmouseleave = () => {
+            popover.hidePopover()
+        }
+
         contextButton.append(div)
     })
 
@@ -61,8 +81,9 @@ function renderContextButton(context) {
         await updateList()
     }
 
-    contextDiv.append(contextButton)
+    contextDiv.append(contextTitle)
     contextDiv.append(removeContextButton)
+    contextDiv.append(contextButton)
     container.append(contextDiv)
 }
 
