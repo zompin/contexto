@@ -1,37 +1,37 @@
 {
-  "manifest_version": 3,
-  "name": "Contexto",
-  "version": "0.0.4",
-  "description": "Switch browser environment between tasks",
-  "background": {
-    "scripts": ["background.js"],
-    "type": "module"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "contexto@rokot",
-      "strict_min_version": "113.0"
+    "manifest_version": 3,
+    "name": "Contexto",
+    "version": "0.0.4",
+    "description": "Switch browser environment between tasks",
+    "background": {
+        "scripts": ["background.js"],
+        "type": "module"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "contexto@rokot",
+            "strict_min_version": "113.0"
+        }
+    },
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+K"
+            }
+        }
+    },
+    "permissions": [
+        "tabs",
+        "menus",
+        "contextualIdentities",
+        "cookies",
+        "activeTab",
+        "storage"
+    ],
+    "icons": {
+        "32": "icons/icon-32x32.svg"
     }
-  },
-  "action": {
-    "default_popup": "popup/popup.html"
-  },
-  "commands": {
-    "_execute_action": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+K"
-      }
-    }
-  },
-  "permissions": [
-    "tabs",
-    "menus",
-    "contextualIdentities",
-    "cookies",
-    "activeTab",
-    "storage"
-  ],
-  "icons": {
-    "32": "icons/icon-32x32.svg"
-  }
 }

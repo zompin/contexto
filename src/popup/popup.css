@@ -15,10 +15,6 @@ body {
     grid-template-columns: 1fr max-content;
 }
 
-.context__title {
-
-}
-
 .context__switch {
     display: flex;
     gap: 5px;
