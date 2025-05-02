@@ -1,101 +1,91 @@
-import {removeContext} from '../js/removeContext.js'
-import {getContexts} from '../js/getContexts.js'
-import {switchContext} from '../js/switchContext.js'
-import {createContext} from '../js/createContext.js'
-import {updateContextTitle} from '../js/updateContextTitle.js'
+import { removeContext } from "../js/removeContext.js";
+import { getContexts } from "../js/getContexts.js";
+import { switchContext } from "../js/switchContext.js";
+import { createContext } from "../js/createContext.js";
+import { updateContextTitle } from "../js/updateContextTitle.js";
+import { app, h, text } from "../js/hyperapp.js";
 
-function getContainer() {
-    return document.querySelector('.container')
-}
+const getContextsEffect = (dispatch) =>
+  getContexts().then((contexts) => dispatch({ contexts }));
 
-async function updateList() {
-    const container = getContainer();
+const Context = (data) => {
+  const onSwitch = (state, id) => [
+    state,
+    async (dispatch) => {
+      await switchContext(id);
+      dispatch({ contexts: await getContexts() });
+    },
+  ];
 
-    [...container.children].forEach(el => {
-        el.remove()
-    })
+  const onRemove = (state, id) => [
+    state,
+    async (dispatch) => {
+      await removeContext(id);
+      dispatch({ contexts: await getContexts() });
+    },
+  ];
 
-    await app()
-}
+  const onChange = (id) => (state, e) => [
+    state,
+    async (dispatch) => {
+      await updateContextTitle(id, e.target.value);
+      dispatch({ contexts: await getContexts() });
+    },
+  ];
 
-function renderCreateContextButton() {
-    const container = getContainer()
-    const createWindowButton = document.createElement('button')
+  const onPopoverShow = (state, e) => (
+    e.target.nextSibling?.showPopover(), state
+  );
 
-    createWindowButton.textContent = 'Blank context'
-    createWindowButton.onclick = async () => {
-        await createContext()
-        await updateList()
-    }
-    container.append(createWindowButton)
-}
+  const onPopoverHide = (state, e) => (
+    e.target.nextSibling?.hidePopover(), state
+  );
 
-function renderContextButton(context) {
-    const container = getContainer()
-    const contextDiv = document.createElement('div')
-    const contextTitle = document.createElement('input')
-    const contextButton = document.createElement('button')
-    const removeContextButton = document.createElement('button')
+  const tabs = data.tabs.map((tab) =>
+    h("div", { class: "context__tab" }, [
+      h("img", {
+        src: tab.favIconUrl,
+        alt: tab.title,
+        onmouseenter: onPopoverShow,
+        onmouseleave: onPopoverHide,
+      }),
+      h("div", { class: "popover", popover: "manual" }, [text(tab.title)]),
+    ]),
+  );
 
-    contextTitle.onkeyup = (e) => updateContextTitle(context.id, e.target.value)
-    contextDiv.className = 'context'
-    contextTitle.className = 'context__title'
-    contextTitle.value = context.title || 'No name'
-    removeContextButton.onclick = async () => {
-        await removeContext(context.id)
-        await updateList()
-    }
-    removeContextButton.className = 'context__remove'
-    removeContextButton.textContent = 'x'
-    contextButton.className = 'context__switch'
+  return h("div", { class: "context" }, [
+    h("input", {
+      class: "context__title",
+      onkeyup: onChange(data.id),
+      value: data.title,
+    }),
+    h("button", { class: "context__remove", onclick: [onRemove, data.id] }, [
+      text("x"),
+    ]),
+    h(
+      "button",
+      { class: "context__switch", onclick: [onSwitch, data.id] },
+      tabs,
+    ),
+  ]);
+};
 
-    context.tabs.forEach((t) => {
-        const div = document.createElement('div')
-        const img = document.createElement('img')
-        const popover = document.createElement('div')
+app({
+  init: [{ contexts: [] }, getContextsEffect],
+  view: (state) => {
+    const onBlankContext = (state) => [
+      state,
+      async (dispatch) => {
+        await createContext();
+        const contexts = await getContexts();
+        dispatch({ contexts });
+      },
+    ];
 
-        popover.popover = 'manual'
-        popover.textContent = t.title
-        popover.className = 'popover'
-
-        img.src = t.favIconUrl
-        img.alt = t.title
-
-        div.className = 'context__tab'
-        div.append(img)
-        div.append(popover)
-
-        div.onmouseenter = () => {
-            popover.showPopover()
-        }
-
-        div.onmouseleave = () => {
-            popover.hidePopover()
-        }
-
-        contextButton.append(div)
-    })
-
-    contextButton.onclick = async () => {
-        await switchContext(context.id)
-        await updateList()
-    }
-
-    contextDiv.append(contextTitle)
-    contextDiv.append(removeContextButton)
-    contextDiv.append(contextButton)
-    container.append(contextDiv)
-}
-
-async function renderStoredContexts() {
-    const contexts = await getContexts()
-
-    contexts.forEach(renderContextButton)
-}
-
-async function app() {
-    await renderStoredContexts()
-    renderCreateContextButton()
-}
-
-app().catch(console.error)
+    return h("div", {}, [
+      ...state.contexts.map(Context),
+      h("button", { onclick: onBlankContext }, [text("Blank context")]),
+    ]);
+  },
+  node: document.querySelector(".container"),
+});

@@ -2,5 +2,8 @@
   "scripts": {
     "start:firefox": "npx web-ext run --source-dir src",
     "make": "rm -f contexto.zip && cd src && zip ../contexto.zip ./manifest.json ./background.js ./icons ./popup ./js -r"
+  },
+  "dependencies": {
+    "prettier": "^3.5.3"
   }
 }
