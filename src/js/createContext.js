@@ -12,6 +12,9 @@ export async function createContext() {
     await setContexts(contexts);
     await browser.tabs.create({}); // Если заранее не создать пустую вкладку, окно закроется и не откроется
 
-    activeContext.tabs.forEach((t) => browser.tabs.remove(t.id));
-    await setCurrentContextTitle("New context");
+    activeContext.tabs.forEach((t) => {
+        if (!t.audible) {
+            browser.tabs.remove(t.id);
+        }
+    });
 }
