@@ -13,8 +13,9 @@ export async function switchContext(contextId) {
     await setContexts(contexts);
     await setCurrentContextTitle(contextForActivate.title);
 
-    contextForActivate.tabs.forEach(({ title, favIconUrl, ...rest }) =>
+    contextForActivate.tabs.forEach(({ title, favIconUrl, audible, ...rest }) =>
         browser.tabs.create(rest),
     );
+
     activeContext.tabs.forEach((t) => browser.tabs.remove(t.id));
 }
