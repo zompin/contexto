@@ -45,13 +45,15 @@ export const Context = (data) => {
     );
 
     return h("div", { class: "context" }, [
-        h("div", { class: "context__title" }, [
-            text(data.title || "New context"),
-        ]),
         h(
             "button",
             { class: "context__switch", onclick: [onSwitch, data.id] },
-            tabs,
+            [
+                h("div", { class: "context__title" }, [
+                    text(data.title || "New context"),
+                ]),
+                ...tabs,
+            ],
         ),
         h(
             "button",

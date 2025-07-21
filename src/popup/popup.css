@@ -16,23 +16,32 @@ input, button {
 }
 
 .context {
-    gap: 5px;
-    display: grid;
-    grid-template-columns: 1fr max-content;
-    align-items: center;
-    border: 1px solid var(--in-content-box-border-color);
-    border-radius: 4px;
-    padding: 5px;
+    position: relative;
+}
+
+.context__remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+}
+
+.context:hover .context__remove {
+    display: block;
 }
 
 .context__title {
-    grid-column: 1 / 3;
+    width: 100%;
+    text-align: left;
 }
 
 .context__switch {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .context__tab {
@@ -54,6 +63,7 @@ input, button {
     inset: unset;
     transform: translateY(-130%);
     text-align: left;
-    position: fixed;
-    left: 5px;
+    position: absolute;
+    left: 10px;
+    max-width: calc(100% - 40px);
 }
