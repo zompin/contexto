@@ -17,6 +17,7 @@ app({
                 await createContext();
                 const contexts = await getContexts();
                 dispatch({ contexts });
+                await setCurrentContextTitle("");
             },
         ];
 
